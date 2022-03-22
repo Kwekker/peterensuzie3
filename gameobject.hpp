@@ -4,14 +4,15 @@
 #include <stdint.h>
 #include <SDL2/SDL.h>
 #include "vector.hpp"
+#include "globals.hpp"
 
 
 class GameObject {
     public:
 
         GameObject();
-        GameObject(SDL_Window* window, Vector<> pos, Vector<> size);
-        void init(SDL_Window* window, Vector<> pos, Vector<> size);
+        GameObject(Vector<> pos, Vector<> size);
+        void init(Vector<> pos, Vector<> size);
         void force(Vector<> f);
         void draw();
 
@@ -20,9 +21,7 @@ class GameObject {
         Vector<> getV();
         void setV(Vector<> v);
 
-    private:
-        SDL_Renderer* renderer;
-        SDL_Window* window;
+    protected:
         Vector<> pos;
         Vector<> size;
         Vector<> v;

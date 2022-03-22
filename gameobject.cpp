@@ -2,16 +2,14 @@
 #include "vector.hpp"
 
 GameObject::GameObject() {
-    
 }
 
-GameObject::GameObject(SDL_Window* window, Vector<int16_t> pos, Vector<int16_t> size) {
-    init(window, pos, size);
+GameObject::GameObject(Vector<int16_t> pos, Vector<int16_t> size) {
+    this->pos = pos;
+    this->size = size;
 }
 
-void GameObject::init(SDL_Window* window, Vector<int16_t> pos, Vector<int16_t> size) {
-    this->window = window;
-    this->renderer = SDL_GetRenderer(window);
+void GameObject::init(Vector<int16_t> pos, Vector<int16_t> size) {
     this->pos = pos;
     this->size = size;
 }
@@ -21,15 +19,10 @@ void GameObject::force(Vector<> f) {
 }
 
 void GameObject::draw() {
-    int width, height;
-    SDL_GetWindowSize(window, &width, &height);
-    if(pos.y + v.y > height) v.y *= -1;
-    else pos += v;
-
+    pos += v;
     SDL_Rect rect = {pos.x, pos.y, size.x, size.y};
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderFillRect(renderer, &rect);
-
 }
 
 Vector<int16_t> GameObject::getPos() {
