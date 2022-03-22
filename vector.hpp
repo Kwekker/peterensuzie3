@@ -1,7 +1,10 @@
 #ifndef _VECTOR_HPP_
 #define _VECTOR_HPP_
 
-template <typename Coord>
+#include <stdint.h>
+#include <iostream>
+
+template <typename Coord = int16_t>
 class Vector {
     public:
         Vector();
@@ -18,8 +21,10 @@ class Vector {
         Vector operator+=(Vector add);
         Vector operator-=(Vector add);
         Vector operator*=(int mult);
-    private:
 
+    private:
 };
 
-#endif // _VECTOR_HPP_
+#include "vector.tpp"
+
+#endif

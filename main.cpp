@@ -7,7 +7,12 @@
 // clang++ main.cpp gameobject.cpp vector.cpp -I/Library/Frameworks/SDL2.framework/Headers -F/Library/Frameworks -framework SDL2 -o main
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <unistd.h>
+#include <ctime>    
 #include "gameobject.hpp"
+#include "vector.hpp"
+
+#define MS_PER_FRAME 33
 
 int main(int argc, char* argv[]){
 
@@ -47,16 +52,15 @@ int main(int argc, char* argv[]){
     SDL_GLContext context;
     context = SDL_GL_CreateContext(window);
 
-    GameObject obj(window, 20, 20, 50, 50);
+    GameObject obj(window, Vector<>(50, 50), Vector<>(50, 50));
 
     bool gameIsRunning = true;
     while(gameIsRunning){
-
+        time_t start = time(0);
         SDL_Event event;
         // Start our event loop
         while(SDL_PollEvent(&event)){
             // Handle each specific event
-            //TODO: make this a switch
 
             switch(event.type) {
                 case SDL_QUIT: gameIsRunning = false; break;
@@ -64,6 +68,8 @@ int main(int argc, char* argv[]){
 
                     break;
                 case SDL_KEYDOWN:
+                    obj.setPos(Vector<>(50, 50));
+                    obj.setV(Vector<>(0, 0));
                     break;
             }
             
@@ -76,8 +82,14 @@ int main(int argc, char* argv[]){
         SDL_RenderClear(renderer);
         
         obj.draw();
+        obj.force(Vector<>(0, 1));
+        std::cout << obj.getV() << "\n" << std::flush;
 
         SDL_RenderPresent(renderer);
+
+        time_t now = time(0);
+        usleep(1000 * MS_PER_FRAME - (now - start));
+
         // SDL_GL_SwapWindow(window);
     }
 

@@ -1,33 +1,32 @@
 #include "gameobject.hpp"
+#include "vector.hpp"
 
 GameObject::GameObject() {
     
 }
 
-GameObject::GameObject(SDL_Window* window, uint16_t x, uint16_t y, uint16_t sizeX, uint16_t sizeY) {
-    this->window = window;
-    this->renderer = SDL_GetRenderer(window);
-    this->x = x;
-    this->y = y;
-    this->sizeX = x;
-    this->sizeY = y;
+GameObject::GameObject(SDL_Window* window, Vector<int16_t> pos, Vector<int16_t> size) {
+    init(window, pos, size);
 }
 
-void GameObject::init(SDL_Window* window, uint16_t x, uint16_t y, uint16_t sizeX, uint16_t sizeY) {
+void GameObject::init(SDL_Window* window, Vector<int16_t> pos, Vector<int16_t> size) {
     this->window = window;
     this->renderer = SDL_GetRenderer(window);
-    this->x = x;
-    this->y = y;
-    this->sizeX = x;
-    this->sizeY = y;
+    this->pos = pos;
+    this->size = size;
+}
+
+void GameObject::force(Vector<> f) {
+    v += f;
 }
 
 void GameObject::draw() {
     int width, height;
     SDL_GetWindowSize(window, &width, &height);
-    if(y + 5 < height) y += 5;
+    if(pos.y + v.y > height) v.y *= -1;
+    else pos += v;
 
-    SDL_Rect rect = {x, y, sizeX, sizeY};
+    SDL_Rect rect = {pos.x, pos.y, size.x, size.y};
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderFillRect(renderer, &rect);
 

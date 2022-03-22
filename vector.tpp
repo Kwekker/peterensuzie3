@@ -1,5 +1,3 @@
-#include "vector.hpp"
-
 template<typename Coord>
 Vector<Coord>::Vector() {
     x = 0;
@@ -46,4 +44,9 @@ Vector<Coord> Vector<Coord>::operator-=(Vector sub) {
 template<typename Coord>
 Vector<Coord> Vector<Coord>::operator*=(int mult) {
     return Vector(x *= mult, y *= mult);
+}
+
+template<typename Coord>
+std::ostream& operator<<(std::ostream &os, Vector<Coord> m) { 
+    return os << "[" << m.x << ", " << m.y << "]";
 }

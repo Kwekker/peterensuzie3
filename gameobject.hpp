@@ -10,24 +10,23 @@ class GameObject {
     public:
 
         GameObject();
-        GameObject(SDL_Window* window, uint16_t x, uint16_t y, uint16_t sizeX, uint16_t sizeY);
-        void init(SDL_Window* window, uint16_t x, uint16_t y, uint16_t sizeX, uint16_t sizeY);
+        GameObject(SDL_Window* window, Vector<> pos, Vector<> size);
+        void init(SDL_Window* window, Vector<> pos, Vector<> size);
+        void force(Vector<> f);
         void draw();
-        
-        Vector<int16_t> getPos();
-        void setPos(Vector<int16_t> pos);
-        Vector<int16_t> getV();
-        void setV(Vector<int16_t> v);
+
+        Vector<> getPos();
+        void setPos(Vector<> pos);
+        Vector<> getV();
+        void setV(Vector<> v);
 
     private:
         SDL_Renderer* renderer;
         SDL_Window* window;
-        Vector<int16_t> pos;
-        Vector<int16_t> v;
-        uint16_t x;
-        uint16_t y;
-        uint16_t sizeX;
-        uint16_t sizeY;
+        Vector<> pos;
+        Vector<> size;
+        Vector<> v;
+        
 };
 
-#endif // !_GAMEOBJECT_HPP_
+#endif // _GAMEOBJECT_HPP_
