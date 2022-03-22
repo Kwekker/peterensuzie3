@@ -78,10 +78,9 @@ int main(int argc, char* argv[]){
                     
                     break;
             }
-
-            duck.handleKey(SDL_GetKeyboardState(NULL));
-            
         }
+
+        duck.handleKey(SDL_GetKeyboardState(NULL));
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         
