@@ -36,18 +36,26 @@ void Level::readFile(const char *file) {
 void Level::draw() {
     for(uint8_t y = 0; y < height; y++) {
         for(uint8_t x = 0; x < width; x++) {
-            std::cout << data[x + y * width];
+            switch(data[x + y * width]) {
+                case '0' :
+                    
+                    break;
+            }
         }
-        std::cout << '\n';
     }
 }
 
 /*
+.level file:
+
+
 size of tiles in pixels
+width of level in tiles
+height of level in tiles
 12312121
 12211123
 ...
 12312313
-end <- literally the word end
 entity things
- */
+
+*/

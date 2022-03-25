@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <iostream>
-// #include "gameobject.hpp"
+#include "gameobject.hpp"
 
 class Level {
     public:
@@ -14,7 +14,7 @@ class Level {
 
     private:
         uint8_t *data;
-        // GameObject *elements;
+        GameObject *elements;
         uint8_t tileWidth;
         uint16_t width;
         uint16_t height;
