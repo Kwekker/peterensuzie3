@@ -4,25 +4,16 @@
 GameObject::GameObject() {
 }
 
-GameObject::GameObject(Vector<int16_t> pos, Vector<int16_t> size) {
+GameObject::GameObject(Vector<int16_t> pos) {
     this->pos = pos;
-    this->size = size;
 }
 
-void GameObject::init(Vector<int16_t> pos, Vector<int16_t> size) {
+void GameObject::init(Vector<int16_t> pos) {
     this->pos = pos;
-    this->size = size;
 }
 
 void GameObject::force(Vector<> f) {
     v += f;
-}
-
-void GameObject::draw() {
-    pos += v;
-    SDL_Rect rect = {pos.x, pos.y, size.x, size.y};
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    SDL_RenderFillRect(renderer, &rect);
 }
 
 Vector<int16_t> GameObject::getPos() {

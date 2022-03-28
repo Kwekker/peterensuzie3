@@ -14,9 +14,13 @@ Level::Level(const char *file) {
 void Level::readFile(const char *file) {
     FILE* levelFile = std::fopen(file, "r");
 
+    if(levelFile == nullptr) {
+        printf("Couldn't open level file %s.", file);
+    }
+
     char s[256];
     std::fgets(s, 256, levelFile);
-    tileWidth = std::atoi(s);
+    size = std::atoi(s);
 
     std::fgets(s, 256, levelFile);
     width = std::atoi(s);
@@ -25,37 +29,53 @@ void Level::readFile(const char *file) {
     height = std::atoi(s);
 
     data = (uint8_t *) malloc(width * height);
-    for(uint8_t y = 0; y < height; y++) {
+    for(uint8_t j = 0; j < height; j++) {
         std::fgets(s, 256, levelFile);
-        memcpy(data + y * width, s, width);
+        memcpy(data + j * width, s, width);
     }
 
     std::fclose(levelFile);
 }
 
 void Level::draw() {
-    for(uint8_t y = 0; y < height; y++) {
-        for(uint8_t x = 0; x < width; x++) {
-            switch(data[x + y * width]) {
-                case '0' :
-                    
-                    break;
+    for(uint8_t j = 0; j < height; j++) {
+        for(uint8_t i = 0; i < width; i++) {
+            SDL_Rect rect = {i * size, j * size, size, size};
+            switch(data[i + j * width]) {
+                case '1':
+                    SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+                    SDL_RenderFillRect(renderer, &rect);
+                    break;       
             }
         }
     }
 }
 
+uint8_t Level::isPassable(uint16_t i, uint16_t j) {
+    return data[i + j * width] == '0';
+}
+
+uint8_t Level::getData(uint16_t i, uint16_t j) {
+    return data[i + j * width];
+}
+
+uint8_t Level::isColliding(uint8_t i, uint8_t j, Duck* duck) {
+      
+    return 0;
+}
+
+
 /*
 .level file:
 
 
-size of tiles in pixels
+size of tiles in piiels
 width of level in tiles
 height of level in tiles
 12312121
 12211123
 ...
 12312313
-entity things
+entitj things
 
 */

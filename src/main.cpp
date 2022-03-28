@@ -14,6 +14,7 @@
 #include "gameobject.hpp"
 #include "duck.hpp"
 #include "vector.hpp"
+#include "level.hpp"
 
 #define FPS 40
 #define MS_PER_FRAME 1000 / FPS
@@ -50,8 +51,8 @@ int main(int argc, char* argv[]){
     window = SDL_CreateWindow("Kleine poezen window :)",
             20,
             20,
-            640,
-            480,
+            1020,
+            720,
             SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
@@ -59,7 +60,10 @@ int main(int argc, char* argv[]){
     SDL_GLContext context;
     context = SDL_GL_CreateContext(window);
 
-    Duck duck(Vector<>(50, 50), Vector<>(50, 50));
+
+    //Start of game variables
+    Duck duck(Vector<>(50, 70), Vector<>(50, 50));
+    Level level("./lvl/1.level");
 
     bool gameIsRunning = true;
     while(gameIsRunning){
@@ -79,11 +83,16 @@ int main(int argc, char* argv[]){
                     break;
             }
         }
-
-        duck.handleKey(SDL_GetKeyboardState(NULL));
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        
+
+        level.draw();
+        if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_R]){
+            duck.setPos(Vector<>(50, 70));
+            duck.setV(Vector<>(0, 0));
+        }
+        duck.handleKey(SDL_GetKeyboardState(NULL));
+        duck.collision(level);
         duck.draw();
         // duck.force(Vector<>(0, 1));
 

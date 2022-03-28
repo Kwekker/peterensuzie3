@@ -11,10 +11,9 @@ class GameObject {
     public:
 
         GameObject();
-        GameObject(Vector<> pos, Vector<> size);
-        void init(Vector<> pos, Vector<> size);
+        GameObject(Vector<> pos);
+        void init(Vector<> pos);
         void force(Vector<> f);
-        void draw();
 
         Vector<> getPos();
         void setPos(Vector<> pos);
@@ -23,7 +22,6 @@ class GameObject {
 
     protected:
         Vector<> pos;
-        Vector<> size;
         Vector<> v;
         
 };
