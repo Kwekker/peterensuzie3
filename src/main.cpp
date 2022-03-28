@@ -85,6 +85,9 @@ int main(int argc, char* argv[]){
         }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+        SDL_Rect rect = {300, 50, 10, 10};
+        SDL_RenderFillRect(renderer, &rect);
 
         level.draw();
         if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_R]){

@@ -1,5 +1,7 @@
 #include "duck.hpp"
 
+#define DEBUG_COLLISION
+
 Duck::Duck(Vector<> pos, Vector<> size) {
     init(pos);
     this->size = size;
@@ -12,9 +14,11 @@ void Duck::handleKey(const uint8_t* state) {
         if(v.x > 0) v.x --;
         else v.x ++;
     }
-    if(standing && state[SDL_SCANCODE_UP]) {
+    if(v.y == 0 && state[SDL_SCANCODE_UP]) {
         v.y -= JUMP_SPEED;
-        standing = 0;
+    }
+    if(state[SDL_SCANCODE_SPACE]) {
+        v += Vector<>(300, 50) - pos;
     }
 }
 
@@ -27,15 +31,15 @@ void Duck::draw() {
 }
 
 void Duck::collision(Level &level) {
+    //Gravity
+    v.y += 1;
+
     const Vector<> nextPos = pos + v;
     const int16_t w = level.getTileWidth();
-    int16_t iFrom = nextPos.x / level.getTileWidth();
-    int16_t iTo = (nextPos.x + size.x) / level.getTileWidth();
+    int16_t iFrom = (nextPos.x - 1) / level.getTileWidth();
+    int16_t iTo = (nextPos.x + size.x + 1) / level.getTileWidth();
     int16_t jFrom = nextPos.y / level.getTileWidth();
-    int16_t jTo = (nextPos.y + size.y) / level.getTileWidth();
-
-    //Gravity
-    if(!standing) v.y += 1;
+    int16_t jTo = (nextPos.y + size.y + 1) / level.getTileWidth();
 
 #ifdef DEBUG_COLLISION
     SDL_Rect rect = {nextPos.x, nextPos.y, size.x, size.y};
@@ -48,13 +52,7 @@ void Duck::collision(Level &level) {
     if(jFrom < 0) jFrom = 0;
     if(jTo >= level.getHeight()) jTo = level.getHeight() - 1;
 
-    // standing moving
-    // 0 0 1
-    // 0 1 1
-    // 1 0 0
-    // 1 1 1
-
-    standing = 0;
+    //TODO: Only check the sides
     for(int16_t i = iFrom; i <= iTo; i++) {
         for(int16_t j = jTo; j >= jFrom; j--) {
             #ifdef DEBUG_COLLISION
@@ -67,31 +65,26 @@ void Duck::collision(Level &level) {
                 SDL_RenderFillRect(renderer, &tileRect);
                 #endif
 
-
                 //Top collision
-                if(j == jFrom) {
+                if(j == jFrom && nextPos.x + 1 < (i + 1) * w && nextPos.x - 1 + size.x > i * w) {
                     pos.y = j * w + w;
                     v.y = 0;
-                    return;
                 }
                 //Bottom collision
-                if(j == jTo) {
+                else if(j == j && nextPos.x + 1 < (i + 1) * w && nextPos.x - 1 + size.x > i * w) {
                     pos.y = j * w - size.y;
                     v.y = 0;
-                    standing = 1;
-                    return;
+                    std::cout << "Bottom collision" << std::endl;
                 }
                 //Left collision
-                if(i == iFrom && v.x < 0 && j < jTo && j > jFrom) {
+                if(i == iFrom && j < jTo && j > jFrom) {
                     pos.x = i * w + w;
                     v.x = 0;
-                    return;
                 }
                 //Right collision
-                if(i == iTo && v.x > 0 && j < jTo && j > jFrom) {
+                else if(i == iTo && j < jTo && j > jFrom) {
                     pos.x = i * w - size.x;
                     v.x = 0;
-                    return;
                 }
             }
             #ifdef DEBUG_COLLISION

@@ -2,7 +2,7 @@
 #define _DUCK_HPP_
 
 #define DUCK_SPEED 6
-#define JUMP_SPEED 10
+#define JUMP_SPEED 15
 
 #include "gameobject.hpp"
 #include "level.hpp"
@@ -20,7 +20,6 @@ class Duck : public GameObject {
 
     private:
         Vector<> size;
-        uint8_t standing;
 };
 
 #endif // _DUCK_HPP_
