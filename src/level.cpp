@@ -59,12 +59,6 @@ uint8_t Level::getData(uint16_t i, uint16_t j) {
     return data[i + j * width];
 }
 
-uint8_t Level::isColliding(uint8_t i, uint8_t j, Duck* duck) {
-      
-    return 0;
-}
-
-
 /*
 .level file:
 

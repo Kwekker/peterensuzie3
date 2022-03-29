@@ -12,6 +12,7 @@
 #include <ctime>    
 #include "globals.hpp"
 #include "gameobject.hpp"
+#include "box.hpp"
 #include "duck.hpp"
 #include "vector.hpp"
 #include "level.hpp"

@@ -4,9 +4,9 @@
 #include <stdint.h>
 #include <iostream>
 #include "gameobject.hpp"
-#include "duck.hpp"
+#include "box.hpp"
 
-class Duck;
+class Box;
 
 class Level {
     public:
@@ -20,8 +20,7 @@ class Level {
         uint16_t getWidth() const { return width; }
         uint16_t getHeight() const { return height; }
         uint8_t getData(uint16_t i, uint16_t j);
-
-        uint8_t isColliding(uint8_t i, uint8_t j, Duck* duck);
+        
 
     private:
         uint8_t *data;
