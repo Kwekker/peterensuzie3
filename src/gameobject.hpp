@@ -6,23 +6,25 @@
 #include "vector.hpp"
 #include "globals.hpp"
 
+#define GRAV 1 << FP
+
 
 class GameObject {
     public:
 
         GameObject();
-        GameObject(Vector<> pos);
-        void init(Vector<> pos);
-        void force(Vector<> f);
+        GameObject(Vector pos);
+        void init(Vector pos);
+        void force(Vector f);
 
-        Vector<> getPos();
-        void setPos(Vector<> pos);
-        Vector<> getV();
-        void setV(Vector<> v);
+        Vector getPos();
+        void setPos(Vector pos);
+        Vector getV();
+        void setV(Vector v);
 
     protected:
-        Vector<> pos;
-        Vector<> v;
+        Vector pos;
+        Vector v;
         
 };
 

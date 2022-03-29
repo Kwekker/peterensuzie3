@@ -62,7 +62,7 @@ int main(int argc, char* argv[]){
 
 
     //Start of game variables
-    Duck duck(Vector<>(50, 70), Vector<>(50, 50));
+    Duck duck(Vector(50, 70), Vector(50, 50));
     Level level("./lvl/1.level");
 
     bool gameIsRunning = true;
@@ -91,13 +91,13 @@ int main(int argc, char* argv[]){
 
         level.draw();
         if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_R]){
-            duck.setPos(Vector<>(50, 70));
-            duck.setV(Vector<>(0, 0));
+            duck.setPos(Vector(50, 70));
+            duck.setV(Vector(0, 0));
         }
         duck.handleKey(SDL_GetKeyboardState(NULL));
         duck.collision(level);
         duck.draw();
-        // duck.force(Vector<>(0, 1));
+        // duck.force(Vector(0, 1));
 
         SDL_RenderPresent(renderer);
 

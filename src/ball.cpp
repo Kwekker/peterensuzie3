@@ -1,6 +1,6 @@
 #include "ball.hpp"
 
-Ball::Ball(Vector<> pos, uint8_t size) {
+Ball::Ball(Vector pos, uint8_t size) {
     this->pos = pos;
     this->size = size;
 }

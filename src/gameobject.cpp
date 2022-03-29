@@ -4,30 +4,30 @@
 GameObject::GameObject() {
 }
 
-GameObject::GameObject(Vector<int16_t> pos) {
+GameObject::GameObject(Vector pos) {
+    this->pos = pos << FP;
+}
+
+void GameObject::init(Vector pos) {
     this->pos = pos;
 }
 
-void GameObject::init(Vector<int16_t> pos) {
-    this->pos = pos;
-}
-
-void GameObject::force(Vector<> f) {
+void GameObject::force(Vector f) {
     v += f;
 }
 
-Vector<int16_t> GameObject::getPos() {
+Vector GameObject::getPos() {
     return pos;
 }
 
-void GameObject::setPos(Vector<int16_t> pos) {
-    this->pos = pos;
+void GameObject::setPos(Vector pos) {
+    this->pos = pos << FP;
 }
 
-Vector<int16_t> GameObject::getV() {
+Vector GameObject::getV() {
     return v;
 }
 
-void GameObject::setV(Vector<int16_t> v) {
-    this->v = v;
+void GameObject::setV(Vector v) {
+    this->v = v << FP;
 }

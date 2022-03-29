@@ -1,8 +1,8 @@
 #ifndef _DUCK_HPP_
 #define _DUCK_HPP_
 
-#define DUCK_SPEED 6
-#define JUMP_SPEED 15
+#define DUCK_SPEED 6    << FP
+#define JUMP_SPEED 15   << FP
 
 #include "gameobject.hpp"
 #include "level.hpp"
@@ -11,15 +11,16 @@ class Level;
 
 class Duck : public GameObject {
     public:
-        Duck(Vector<> pos, Vector<> size);
+        Duck(Vector pos, Vector size);
         void handleKey(const uint8_t* state);
         void collision(Level &level);
         void draw();
 
-        Vector<> getSize() const { return size; }
+        Vector getSize() const { return size; }
 
     private:
-        Vector<> size;
+        Vector size;
+        uint8_t standing;
 };
 
 #endif // _DUCK_HPP_

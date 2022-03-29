@@ -7,7 +7,7 @@
 
 class Ball : public GameObject {
     public:
-        Ball(Vector<> pos, uint8_t size);
+        Ball(Vector pos, uint8_t size);
         void collision(Level &level);
         void draw();
         uint8_t getSize() const { return size; };
