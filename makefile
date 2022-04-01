@@ -8,5 +8,8 @@ OBJ_NAME = winmain
 all : $(OBJS)
 	g++ $(OBJS) -IC:\mingw_dev_lib\include\SDL2 -LC:\mingw_dev_lib\lib -w -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2 -o $(OBJ_NAME)
 
+fast : $(OBJS)
+	g++ $(OBJS) -IC:\mingw_dev_lib\include\SDL2 -LC:\mingw_dev_lib\lib -w -Wl,-subsystem,windows -lmingw32 -lSDL2main -lSDL2 -O0 -o $(OBJ_NAME)
+
 run : $(OBJ_NAME)
 	./$(OBJ_NAME)

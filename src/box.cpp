@@ -1,17 +1,18 @@
 #include "box.hpp"
 
-// #define DEBUG_COLLISION
+#define DEBUG_COLLISION
 
 Box::Box(Vector pos, Vector size) {
     init(pos << 4);
     this->size = size;
 }
 
-void Box::draw() {
-    pos += v; 
+void Box::draw(uint8_t slow) {
+    if(slow) pos += v / SLOWNESS;
+    else pos += v; 
 
     SDL_Rect rect = {pos.getX(), pos.getY(), size.x.raw, size.y.raw};
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderFillRect(renderer, &rect);
 }
 
@@ -26,16 +27,16 @@ void Box::collision(Level &level) {
     int16_t jFrom = nextPos.y.whole / level.getTileWidth();
     int16_t jTo = (nextPos.y.whole + size.y + 1) / level.getTileWidth();
 
+    if(iFrom < 0) iFrom = 0;
+    if(iTo >= level.getWidth()) iTo = level.getWidth() - 1;
+    if(jFrom < 0) jFrom = 0;
+    if(jTo >= level.getHeight()) jTo = level.getHeight() - 1;
+
 #ifdef DEBUG_COLLISION
     SDL_Rect rect = {nextPos.x.raw, nextPos.y.raw, size.x, size.y};
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 100);
     SDL_RenderFillRect(renderer, &rect);
 #endif
-
-    if(iFrom < 0) iFrom = 0;
-    if(iTo >= level.getWidth()) iTo = level.getWidth() - 1;
-    if(jFrom < 0) jFrom = 0;
-    if(jTo >= level.getHeight()) jTo = level.getHeight() - 1;
 
     standing = 0;
     for(int16_t i = iFrom; i <= iTo; i++) {

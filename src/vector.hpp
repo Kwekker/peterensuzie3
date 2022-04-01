@@ -37,6 +37,7 @@ class Vector {
         Vector operator+(Vector add);
         Vector operator-(Vector add);
         Vector operator*(int mult);
+        Vector operator/(int quot);
         Vector operator+=(Vector add);
         Vector operator-=(Vector add);
         Vector operator*=(int mult);

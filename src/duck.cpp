@@ -4,7 +4,7 @@ Duck::Duck(Vector pos, Vector size) : Box(pos, size) {
 
 }
 
-void Duck::handleKey(const uint8_t* state) {
+void Duck::handleKey(const uint8_t* state, uint8_t frame) {
     if(standing) {
         //Controls
         if(state[SDL_SCANCODE_LEFT] && v.x.raw > -DUCK_SPEED) v.x.whole -= 1;
@@ -16,11 +16,15 @@ void Duck::handleKey(const uint8_t* state) {
             else v.x.whole += 1;
         }
     }
-    if(standing && v.y.raw == 0 && state[SDL_SCANCODE_UP]) {
+
+    //Jumping
+    if(standing && v.y.raw == 0 && (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W])) {
         v.y.raw -= JUMP_SPEED;
         standing = 0;
     }
-    if(state[SDL_SCANCODE_SPACE]) {
+
+    //Pulling and Pushing
+    if(state[SDL_SCANCODE_SPACE] && (frame == 0 || frame == 0xff)) {
         Vector point;
         point.set(300, 50);
         point -= Vector::v(size.x / 2, size.y / 2);

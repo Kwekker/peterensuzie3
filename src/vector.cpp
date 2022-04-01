@@ -34,8 +34,12 @@ Vector Vector::operator-(Vector sub) {
     return Vector(x - sub.x, y - sub.y);
 }
 
+Vector Vector::operator/(int quot) {
+    return Vector(x / quot, y / quot);
+}
+
 Vector Vector::operator*(int mult) {
-    return Vector(x * mult, y * mult);
+    return Vector(x.whole * mult, y.whole * mult);
 }
 
 Vector Vector::operator+=(Vector add) {

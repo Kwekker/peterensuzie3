@@ -5,7 +5,7 @@ GameObject::GameObject() {
 }
 
 GameObject::GameObject(Vector pos) {
-    this->pos = pos << FP;
+    this->pos = pos;
 }
 
 void GameObject::init(Vector pos) {
@@ -21,7 +21,7 @@ Vector GameObject::getPos() {
 }
 
 void GameObject::setPos(Vector pos) {
-    this->pos = pos << FP;
+    this->pos = pos;
 }
 
 Vector GameObject::getV() {
@@ -29,5 +29,5 @@ Vector GameObject::getV() {
 }
 
 void GameObject::setV(Vector v) {
-    this->v = v << FP;
+    this->v = v;
 }

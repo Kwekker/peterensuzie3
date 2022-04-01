@@ -17,7 +17,7 @@
 #include "vector.hpp"
 #include "level.hpp"
 
-#define FPS 40
+uint8_t FPS = 40;
 #define MS_PER_FRAME 1000 / FPS
 
 SDL_Window* window = nullptr;
@@ -61,29 +61,38 @@ int main(int argc, char* argv[]){
     SDL_GLContext context;
     context = SDL_GL_CreateContext(window);
 
-
     //Start of game variables
     Duck duck(Vector(50, 70), Vector(50, 50));
     Level level("./lvl/1.level");
+    uint8_t frame = 0xff;
 
     bool gameIsRunning = true;
-    while(gameIsRunning){
+    while(gameIsRunning) {
         time_t start = time(0);
-        SDL_Event event;
-        // Start our event loop
-        while(SDL_PollEvent(&event)){
-            // Handle each specific event
+        const uint8_t *keyBoardState = SDL_GetKeyboardState(NULL);
 
+        SDL_Event event;
+        while(SDL_PollEvent(&event)){
             switch(event.type) {
                 case SDL_QUIT: gameIsRunning = false; break;
                 case SDL_MOUSEMOTION: 
 
                     break;
                 case SDL_KEYDOWN:
-                    
+                    if(event.key.keysym.sym == SDLK_g && event.key.repeat == 0) {
+                        frame = 0;
+                        std::cout << "G key pressed\n";
+                    }
+                    break;
+                case SDL_KEYUP:
+                    if(!keyBoardState[SDL_SCANCODE_G]) frame = 0xff;
                     break;
             }
         }
+        if(keyBoardState[SDL_SCANCODE_H])FPS = 2;
+        else FPS = 40;
+        
+        
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
@@ -91,13 +100,15 @@ int main(int argc, char* argv[]){
         SDL_RenderFillRect(renderer, &rect);
 
         level.draw();
-        if(SDL_GetKeyboardState(NULL)[SDL_SCANCODE_R]){
+        if(keyBoardState[SDL_SCANCODE_R]){
             duck.setPos(Vector(50, 70));
             duck.setV(Vector(0, 0));
         }
-        duck.handleKey(SDL_GetKeyboardState(NULL));
-        duck.collision(level);
-        duck.draw();
+        if(frame < 0xff) frame = (frame + 1) & 0xf;
+        std::cout << "frame: " << (int)frame << std::endl;
+        duck.handleKey(keyBoardState, frame);
+        if(frame == 0xff || frame == 0) duck.collision(level);
+        duck.draw(frame != 0xff);
         // duck.force(Vector(0, 1));
 
         SDL_RenderPresent(renderer);

@@ -7,6 +7,7 @@
 #include "globals.hpp"
 
 #define GRAV 1 << FP
+#define SLOWNESS 16
 
 
 class GameObject {
