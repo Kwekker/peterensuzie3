@@ -58,12 +58,13 @@ int main(int argc, char* argv[]){
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     // OpenGL setup the graphics context
-    SDL_GLContext context;
-    context = SDL_GL_CreateContext(window);
+    // SDL_GLContext context;
+    // context = SDL_GL_CreateContext(window);
 
     //Start of game variables
-    Duck duck(Vector(50, 70), Vector(50, 50));
     Level level("./lvl/1.level");
+    Duck duck(Vector(400, 150), Vector(50, 50), level);
+    Box box(Vector(500, 70), Vector(51, 50), level);
     uint8_t frame = 0xff;
 
     bool gameIsRunning = true;
@@ -103,12 +104,15 @@ int main(int argc, char* argv[]){
         if(keyBoardState[SDL_SCANCODE_R]){
             duck.setPos(Vector(50, 70));
             duck.setV(Vector(0, 0));
+            box.setPos(Vector(500, 150));
+            box.setV(Vector(0, 0));
         }
         if(frame < 0xff) frame = (frame + 1) & 0xf;
-        std::cout << "frame: " << (int)frame << std::endl;
+        if(keyBoardState[SDL_SCANCODE_SPACE]) box.move(&duck);
+        
         duck.handleKey(keyBoardState, frame);
-        if(frame == 0xff || frame == 0) duck.collision(level);
-        duck.draw(frame != 0xff);
+        duck.draw(frame);
+        box.draw(frame);
         // duck.force(Vector(0, 1));
 
         SDL_RenderPresent(renderer);

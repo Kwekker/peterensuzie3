@@ -15,12 +15,22 @@ Vector::Vector(FPNum x, FPNum y) {
     this->y.raw = y.raw;
 }
 
+Vector Vector::getComponent(Vector d) {
+    if(d.x.raw == 0 || d.y.raw == 0) return Vector(0, 0);
+    return Vector((d.x * d.y * y + d.x * d.x * x) / (d.y * d.y + d.x * d.x), (d.x * d.y * x + d.y * d.y * y) / (d.y * d.y + d.x * d.x));
+}
+
+uint16_t Vector::length() {
+    
+    return sqrt(x * x + y * y);
+}
+
 void Vector::set(int16_t x, int16_t y) {
     this->x.whole = x;
     this->y.whole = y;
 }
 
-Vector Vector::normalize(uint8_t newLength) {
+Vector Vector::normalize(uint16_t newLength) {
     uint16_t length = sqrt((x.raw * x.raw) + (y.raw * y.raw));
     if(!length) length = 1;
     return Vector(newLength * x.raw / length, newLength * y.raw / length);
@@ -34,12 +44,16 @@ Vector Vector::operator-(Vector sub) {
     return Vector(x - sub.x, y - sub.y);
 }
 
+Vector Vector::operator-() {
+    return Vector(-x, -y);
+}
+
 Vector Vector::operator/(int quot) {
-    return Vector(x / quot, y / quot);
+    return Vector(x.raw / quot, y.raw / quot);
 }
 
 Vector Vector::operator*(int mult) {
-    return Vector(x.whole * mult, y.whole * mult);
+    return Vector(x.raw * mult, y.raw * mult);
 }
 
 Vector Vector::operator+=(Vector add) {
@@ -72,4 +86,8 @@ char* Vector::toString() {
     static char ret[15];
     sprintf(ret, "[%d, %d]", x.raw, y.raw);
     return ret;
+}
+
+Vector operator*(int mult, Vector v) {
+    return Vector(v.x * mult, v.y * mult);
 }

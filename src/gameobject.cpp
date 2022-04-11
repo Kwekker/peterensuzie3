@@ -13,7 +13,7 @@ void GameObject::init(Vector pos) {
 }
 
 void GameObject::force(Vector f) {
-    v += f;
+    v += f / mass;
 }
 
 Vector GameObject::getPos() {

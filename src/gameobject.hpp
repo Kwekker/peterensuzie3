@@ -8,6 +8,7 @@
 
 #define GRAV 1 << FP
 #define SLOWNESS 16
+#define MASS_QUOTIENT 100
 
 
 class GameObject {
@@ -26,6 +27,7 @@ class GameObject {
     protected:
         Vector pos;
         Vector v;
+        FPNum mass = {0};
         
 };
 

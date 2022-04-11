@@ -1,3 +1,6 @@
 SDL2_Tutorials/
 .vscode/
 .DS_Store
+*.o
+*.a
+*.exe
