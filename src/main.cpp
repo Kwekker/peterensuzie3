@@ -64,7 +64,7 @@ int main(int argc, char* argv[]){
     //Start of game variables
     Level level("./lvl/1.level");
     Duck duck(Vector(400, 150), Vector(52, 52), level);
-    Box box(Vector(500, 70), Vector(51, 50), level);
+    Box box(Vector(500, 70), Vector(30, 30), level);
     uint8_t frame = 0xff;
 
     bool gameIsRunning = true;

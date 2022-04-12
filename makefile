@@ -8,16 +8,17 @@ CFLAGS = -Wall
 
 all: default
 
-OBJECTS = $(patsubst src/%.cpp, %.o, $(wildcard src/*.cpp))
+OBJECTS = $(patsubst src/%.cpp, obj/%.o, $(wildcard src/*.cpp))
 HEADERS = $(wildcard src/*.hpp)
 
-%.o: src/%.cpp $(HEADERS)
-	$(CC) $(CFLAGS) -c $< -o $@ -Wall
+obj/%.o: src/%.cpp $(HEADERS)
+
+	$(CC) $(CFLAGS) -c $< -o $@ -Wall -std=c++11
 
 .PRECIOUS: $(TARGET) $(OBJECTS)
 
 mac: $(OBJECTS)
-	$(CC) $(OBJECTS) $(MACLIBS) -o $(TARGET)
+	clang++ $(OBJECTS) $(MACLIBS) -o $(TARGET)
 
 default: $(OBJECTS)
 	$(CC) $(OBJECTS) -Wall $(LIBS) -o $(TARGET) -g
@@ -26,5 +27,5 @@ run:
 	./main
 
 clean:
-	-rm -f *.o
+	-rm -f obj/*.o
 	-rm -f $(TARGET)
