@@ -25,8 +25,8 @@ class Vector {
         FPNum x;
         FPNum y;
 
-        int16_t getX()    { return x.whole; };
-        int16_t getY()    { return y.whole; };
+        const int16_t getX()    { return x.whole; };
+        const int16_t getY()    { return y.whole; };
         void setX(int16_t x) { this->x.whole = x; this->x.fraction = 0; };
         void setY(int16_t y) { this->y.whole = y; this->y.fraction = 0; };
         Vector getComponent(Vector direction);

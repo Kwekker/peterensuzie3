@@ -27,6 +27,7 @@ class Box : public GameObject {
 
         Vector getSize() const { return size; }
     protected:
+        void collide(uint8_t axis, int16_t coord);
         Level* level;
         Vector size;
         uint8_t standing = 0;

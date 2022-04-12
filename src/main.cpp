@@ -63,7 +63,7 @@ int main(int argc, char* argv[]){
 
     //Start of game variables
     Level level("./lvl/1.level");
-    Duck duck(Vector(400, 150), Vector(50, 50), level);
+    Duck duck(Vector(400, 150), Vector(52, 52), level);
     Box box(Vector(500, 70), Vector(51, 50), level);
     uint8_t frame = 0xff;
 
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]){
                     break;
             }
         }
-        if(keyBoardState[SDL_SCANCODE_H])FPS = 2;
+        if(keyBoardState[SDL_SCANCODE_H])FPS = 1;
         else FPS = 40;
         
         
@@ -102,9 +102,9 @@ int main(int argc, char* argv[]){
 
         level.draw();
         if(keyBoardState[SDL_SCANCODE_R]){
-            duck.setPos(Vector(50, 70));
+            duck.setPos(Vector(4000, 150));
             duck.setV(Vector(0, 0));
-            box.setPos(Vector(500, 150));
+            box.setPos(Vector(5000, 150));
             box.setV(Vector(0, 0));
         }
         if(frame < 0xff) frame = (frame + 1) & 0xf;

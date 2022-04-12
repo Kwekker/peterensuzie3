@@ -1,6 +1,6 @@
 #include "duck.hpp"
 
-#define DUCK_SPEED 28
+#define DUCK_SPEED 32
 #define JUMP_SPEED 240
 
 Duck::Duck(Vector pos, Vector size, Level &level) : Box(pos, size, level) {
@@ -10,15 +10,19 @@ Duck::Duck(Vector pos, Vector size, Level &level) : Box(pos, size, level) {
 void Duck::handleKey(const uint8_t* state, uint8_t frame) {
 
     //Jumping
-    if(standing && v.y.raw == 0 && (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W])) {
+    if((standing & STANDING_BOTTOM_bm) && v.y.raw == 0 && (state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W])) {
         v.y.raw -= JUMP_SPEED;
         standing = 0;
     }
 
     //Walking
-    else if(standing) {
+    if(standing & STANDING_HORI_gm) {
         if(state[SDL_SCANCODE_LEFT]) v.x.raw -= DUCK_SPEED;
         else if(state[SDL_SCANCODE_RIGHT]) v.x.raw += DUCK_SPEED;
+    }
+    else if(standing & STANDING_VERT_gm) {
+        if(state[SDL_SCANCODE_UP]) v.y.raw -= DUCK_SPEED * 2;
+        else if(state[SDL_SCANCODE_DOWN]) v.y.raw += DUCK_SPEED / 2;
     }
 }
 
