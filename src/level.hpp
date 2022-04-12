@@ -4,9 +4,6 @@
 #include <stdint.h>
 #include <iostream>
 #include "gameobject.hpp"
-#include "box.hpp"
-
-class Box;
 
 class Level {
     public:
@@ -14,6 +11,8 @@ class Level {
         Level(const char *file);
         void readFile(const char *file);
         void draw();
+        void run(uint8_t frame);
+        void mouse(uint8_t button, int16_t x, int16_t y);
         uint8_t isPassable(uint16_t i, uint16_t j);
 
         uint8_t getTileWidth() const { return size; }
@@ -24,10 +23,12 @@ class Level {
 
     private:
         uint8_t *data;
-        GameObject *elements;
-        uint8_t size;
+        uint8_t size; //size of each tile
         uint16_t width;
         uint16_t height;
+    
+        GameObject **elements;
+        uint8_t elementsAmount;
 };
 
 #endif // _LEVEL_HPP_

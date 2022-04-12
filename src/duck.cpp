@@ -17,12 +17,12 @@ void Duck::handleKey(const uint8_t* state, uint8_t frame) {
 
     //Walking
     if(standing & STANDING_HORI_gm) {
-        if(state[SDL_SCANCODE_LEFT]) v.x.raw -= DUCK_SPEED;
-        else if(state[SDL_SCANCODE_RIGHT]) v.x.raw += DUCK_SPEED;
+        if(state[SDL_SCANCODE_LEFT] || state[SDL_SCANCODE_A]) v.x.raw -= DUCK_SPEED;
+        else if(state[SDL_SCANCODE_RIGHT] || state[SDL_SCANCODE_D]) v.x.raw += DUCK_SPEED;
     }
     else if(standing & STANDING_VERT_gm) {
-        if(state[SDL_SCANCODE_UP]) v.y.raw -= DUCK_SPEED;
-        else if(state[SDL_SCANCODE_DOWN]) v.y.raw += DUCK_SPEED / 2;
+        if(state[SDL_SCANCODE_UP] || state[SDL_SCANCODE_W]) v.y.raw -= DUCK_SPEED;
+        else if(state[SDL_SCANCODE_DOWN]  || state[SDL_SCANCODE_S]) v.y.raw += DUCK_SPEED / 2;
     }
 }
 

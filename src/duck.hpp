@@ -3,9 +3,9 @@
 
 #include <stdint.h>
 #include <iostream>
-#include "gameobject.hpp"
 #include "level.hpp"
 #include "vector.hpp"
+#include "gameobject.hpp"
 #include "box.hpp"
 
 class Duck : public Box {

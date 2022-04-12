@@ -22,17 +22,16 @@ class Box : public GameObject {
         Box(Vector pos, Vector size, Level &level);
         void collision(uint8_t slow);
         void draw(uint8_t frame);
-        void move(Box* box);
+        void move(Box* box, uint8_t pull);
+        void mouse(uint8_t button, int16_t x, int16_t y);
         Vector getCenter();
 
-        Vector getSize() const { return size; }
+        Vector getSize() { return size; }
     protected:
         void collide(uint8_t axis, int16_t coord);
         Level* level;
-        Vector size;
         uint8_t standing = 0;
-        Box *movingBox;
-        Vector movement;
+        uint8_t moving = 0;
 };
 
 #endif // _BOX_HPP_

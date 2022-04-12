@@ -2,24 +2,17 @@
 
 #define DEBUG_COLLISION
 
-#define MOVEMENT_STRENGTH 530
+#define MOVEMENT_STRENGTH 570
 #define MOVEMENT_MAX 128
 #define FRICTION_FACTOR 0.8
 
-Box::Box(Vector pos, Vector size, Level &level) {
-    init(pos << 4);
-    this->size = size;
+Box::Box(Vector pos, Vector size, Level &level) : GameObject(pos, size){
     this->level = &level;
-    this->mass.raw = size.x * size.y / MASS_QUOTIENT;
-    if(this->mass.raw == 0) {
-        this->mass.raw = 1;
-        std::cout << "Warning: Box with mass 0" << std::endl;
-    }
 }
-void Box::move(Box* box) {
+void Box::move(Box* box, uint8_t pull) {
     Vector displacement = (box->getCenter() - getCenter()).normalize(MOVEMENT_STRENGTH);
     Vector movement = (box->v - v).getComponent(displacement);
-
+    if(pull) displacement = -displacement;
     // std::cout << movement << " * " << displacement.toString() << std::endl;
     if(movement.length() < MOVEMENT_MAX || (movement.x & 0x8000) != (displacement.x & 0x8000)) {
         force(-displacement);
@@ -27,11 +20,26 @@ void Box::move(Box* box) {
     }
 }
 
+void Box::mouse(uint8_t button, int16_t x, int16_t y) {
+    if(!button) {
+        moving = 0;
+        return;
+    }
+    if(x > pos.getX() && x < pos.getX() + size.x && y > pos.getY() && y < pos.getY() + size.y) {
+        moving = button;
+    }
+}
+
 Vector Box::getCenter() {
-    return pos + Vector(size.x / 2, size.y / 2);
+    return pos + size * 8;
 }
 
 void Box::draw(uint8_t frame) {
+    Box* pPlayer = (Box*) player;
+
+    //Moving
+    if(moving) pPlayer->move(this, moving == 3);
+
     //Gravity
     if(frame == 0xff || frame == 0) v.y.raw += GRAV;
     
@@ -43,13 +51,20 @@ void Box::draw(uint8_t frame) {
     SDL_Rect rect = {pos.getX(), pos.getY(), size.x, size.y};
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderFillRect(renderer, &rect);
+
+    if(frame != 0xff) {
+        SDL_SetRenderDrawColor(renderer, 0, 100, 230, 255);
+        SDL_RenderDrawLine(renderer, getCenter().getX(), getCenter().getY(), pPlayer->getCenter().getX(), pPlayer->getCenter().getY());
+    }
 }
 
 void Box::collision(uint8_t slow) {
 
     Vector nextPos;
-    if(slow) nextPos = pos + v / SLOWNESS + Vector(0, 2 * (standing & STANDING_BOTTOM_bm));
-    else nextPos = pos + Vector(0, 2 * (standing & STANDING_BOTTOM_bm));
+    if(slow) nextPos = pos + v / SLOWNESS;
+    else nextPos = pos + v;
+    // if(slow) nextPos = pos + v / SLOWNESS + Vector(0, 2 * (standing & STANDING_BOTTOM_bm));
+    // else nextPos = pos + Vector(0, 2 * (standing & STANDING_BOTTOM_bm));
     const int16_t w = level->getTileWidth();
     int16_t iFrom = (nextPos.x.whole) / level->getTileWidth();
     int16_t iTo = (nextPos.x.whole + size.x - 1) / level->getTileWidth() ;
@@ -60,6 +75,9 @@ void Box::collision(uint8_t slow) {
     if(iTo >= level->getWidth()) iTo = level->getWidth() - 1;
     if(jFrom < 0) jFrom = 0;
     if(jTo >= level->getHeight()) jTo = level->getHeight() - 1;
+    if(iFrom > level->getWidth()) return;
+    if(jFrom > level->getHeight()) return;
+
 
     #ifdef DEBUG_COLLISION
         SDL_Rect rect = {nextPos.x.whole, nextPos.y.whole, size.x, size.y};
@@ -82,16 +100,16 @@ void Box::collision(uint8_t slow) {
             if(!level->isPassable(i, j)) {
 
                 //Bottom collision
-                if(j == jTo) collide(STANDING_BOTTOM_bm, j * w - size.y);
+                if(j == jTo && v.y > 0) collide(STANDING_BOTTOM_bm, j * w - size.y);
 
                 //Right collision
-                if(i == iTo) collide(STANDING_RIGHT_bm, i * w - size.x);
+                if(i == iTo && v.x > 0) collide(STANDING_RIGHT_bm, i * w - size.x);
                 
                 //Top collision
-                if(j == jFrom) collide(STANDING_TOP_bm, j * w + w);
+                if(j == jFrom && v.y < 0) collide(STANDING_TOP_bm, j * w + w);
 
                 //Left collision
-                if(i == iFrom) collide(STANDING_LEFT_bm, i * w + w);
+                if(i == iFrom && v.x < 0) collide(STANDING_LEFT_bm, i * w + w);
             }
         }
     }
@@ -147,7 +165,6 @@ void Box::collision(uint8_t slow) {
         #endif
     }
 
-    if(size.x != 51) std::cout << std::hex << (int)standing << std::endl << std::flush;
     //Friction
     if(v.x.raw != 0 && (standing & STANDING_HORI_gm)) v.x.raw *= FRICTION_FACTOR;
     if(v.y.raw != 0 && (standing & STANDING_VERT_gm)) v.y.raw *= FRICTION_FACTOR;

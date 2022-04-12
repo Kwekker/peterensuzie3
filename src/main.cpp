@@ -11,11 +11,9 @@
 #include <unistd.h>
 #include <ctime>    
 #include "globals.hpp"
-#include "gameobject.hpp"
-#include "box.hpp"
+#include "level.hpp"
 #include "duck.hpp"
 #include "vector.hpp"
-#include "level.hpp"
 
 uint8_t FPS = 40;
 #define MS_PER_FRAME 1000 / FPS
@@ -23,13 +21,9 @@ uint8_t FPS = 40;
 SDL_Window* window = nullptr;
 SDL_Renderer* renderer = nullptr;
 int16_t width, height;
+void *player;
 
 int main(int argc, char* argv[]){
-
-    // Create a window data type
-    // This pointer will point to the 
-    // window that is allocated from SDL_CreateWindow
-    
 
     // Initialize the video subsystem.
     // If it returns less than 1, then an
@@ -64,7 +58,7 @@ int main(int argc, char* argv[]){
     //Start of game variables
     Level level("./lvl/1.level");
     Duck duck(Vector(400, 150), Vector(52, 52), level);
-    Box box(Vector(500, 70), Vector(30, 30), level);
+    player = &duck;
     uint8_t frame = 0xff;
 
     bool gameIsRunning = true;
@@ -76,17 +70,20 @@ int main(int argc, char* argv[]){
         while(SDL_PollEvent(&event)){
             switch(event.type) {
                 case SDL_QUIT: gameIsRunning = false; break;
-                case SDL_MOUSEMOTION: 
-
+                case SDL_MOUSEBUTTONDOWN:
+                    if(event.button.button == 1 || event.button.button == 3) level.mouse(event.button.button, event.button.x, event.button.y);
                     break;
+                case SDL_MOUSEBUTTONUP:
+                    if(event.button.button == 1 || event.button.button == 3) level.mouse(0, event.button.x, event.button.y);
+                    break;
+
                 case SDL_KEYDOWN:
-                    if(event.key.keysym.sym == SDLK_g && event.key.repeat == 0) {
+                    if(event.key.keysym.sym == SDLK_f && event.key.repeat == 0) {
                         frame = 0;
-                        std::cout << "G key pressed\n";
                     }
                     break;
                 case SDL_KEYUP:
-                    if(!keyBoardState[SDL_SCANCODE_G]) frame = 0xff;
+                    if(!keyBoardState[SDL_SCANCODE_F]) frame = 0xff;
                     break;
             }
         }
@@ -104,15 +101,12 @@ int main(int argc, char* argv[]){
         if(keyBoardState[SDL_SCANCODE_R]){
             duck.setPos(Vector(4000, 150));
             duck.setV(Vector(0, 0));
-            box.setPos(Vector(5000, 150));
-            box.setV(Vector(0, 0));
         }
         if(frame < 0xff) frame = (frame + 1) & 0xf;
-        if(keyBoardState[SDL_SCANCODE_SPACE]) box.move(&duck);
         
         duck.handleKey(keyBoardState, frame);
         duck.draw(frame);
-        box.draw(frame);
+        level.run(frame);
         // duck.force(Vector(0, 1));
 
         SDL_RenderPresent(renderer);
@@ -121,7 +115,7 @@ int main(int argc, char* argv[]){
         time_t now = time(0);
         usleep(1000 * MS_PER_FRAME - (now - start));
     }
-
+    std::cout << "Goodbye!\n" << std::flush;
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 0;
