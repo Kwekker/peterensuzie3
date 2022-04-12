@@ -32,9 +32,12 @@ Vector Box::getCenter() {
 }
 
 void Box::draw(uint8_t frame) {
-    if(frame == 0xff || frame == 0) collision();
+    //Gravity
+    if(frame == 0xff || frame == 0) v.y.raw += GRAV;
+    
+    collision(frame != 0xff);
 
-    if(frame == 0xff || frame == 0) pos += v; 
+    if(frame == 0xff) pos += v; 
     else pos += v / SLOWNESS;
 
     SDL_Rect rect = {pos.getX(), pos.getY(), size.x, size.y};
@@ -42,11 +45,11 @@ void Box::draw(uint8_t frame) {
     SDL_RenderFillRect(renderer, &rect);
 }
 
-void Box::collision() {
-    //Gravity
-    v.y.raw += GRAV;
-    
-    Vector nextPos = pos + v + Vector(0, 2 * (standing & STANDING_BOTTOM_bm));
+void Box::collision(uint8_t slow) {
+
+    Vector nextPos;
+    if(slow) nextPos = pos + v / SLOWNESS + Vector(0, 2 * (standing & STANDING_BOTTOM_bm));
+    else nextPos = pos + Vector(0, 2 * (standing & STANDING_BOTTOM_bm));
     const int16_t w = level->getTileWidth();
     int16_t iFrom = (nextPos.x.whole) / level->getTileWidth();
     int16_t iTo = (nextPos.x.whole + size.x - 1) / level->getTileWidth() ;
@@ -58,11 +61,11 @@ void Box::collision() {
     if(jFrom < 0) jFrom = 0;
     if(jTo >= level->getHeight()) jTo = level->getHeight() - 1;
 
-#ifdef DEBUG_COLLISION
-    SDL_Rect rect = {nextPos.x.whole, nextPos.y.whole, size.x, size.y};
-    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 100);
-    SDL_RenderFillRect(renderer, &rect);
-#endif
+    #ifdef DEBUG_COLLISION
+        SDL_Rect rect = {nextPos.x.whole, nextPos.y.whole, size.x, size.y};
+        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 100);
+        SDL_RenderFillRect(renderer, &rect);
+    #endif
 
     standing = 0;
 
@@ -70,11 +73,11 @@ void Box::collision() {
         uint8_t isTopBottom = (j == jFrom || j == jTo);
         for(int16_t i = iFrom + isTopBottom; i <= iTo - isTopBottom; i += 1 + !isTopBottom * (iTo - iFrom - 1)) {
 
-#ifdef DEBUG_COLLISION
-            SDL_Rect rect = {i * w, j * w, w, w};
-            SDL_SetRenderDrawColor(renderer, 255, 255, 0, 100);
-            SDL_RenderDrawRect(renderer, &rect);
-#endif
+            #ifdef DEBUG_COLLISION
+                SDL_Rect rect = {i * w, j * w, w, w};
+                SDL_SetRenderDrawColor(renderer, 255, 255, 0, 100);
+                SDL_RenderDrawRect(renderer, &rect);
+            #endif
 
             if(!level->isPassable(i, j)) {
 
@@ -96,7 +99,7 @@ void Box::collision() {
     nextPos = pos;
 
     #ifdef DEBUG_COLLISION
-    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+        SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
     #endif
 
     //Top right collision
@@ -106,8 +109,8 @@ void Box::collision() {
         else collide(STANDING_TOP_bm, jFrom * w + w);
     
         #ifdef DEBUG_COLLISION
-        SDL_Rect rect = {iTo * w, jFrom * w, w, w};
-        SDL_RenderDrawRect(renderer, &rect);
+            SDL_Rect rect = {iTo * w, jFrom * w, w, w};
+            SDL_RenderDrawRect(renderer, &rect);
         #endif
     }
     //Top left collision
@@ -117,8 +120,8 @@ void Box::collision() {
         else collide(STANDING_LEFT_bm, iFrom * w + w);
 
         #ifdef DEBUG_COLLISION
-        SDL_Rect rect = {iFrom * w, jFrom * w, w, w};
-        SDL_RenderDrawRect(renderer, &rect);
+            SDL_Rect rect = {iFrom * w, jFrom * w, w, w};
+            SDL_RenderDrawRect(renderer, &rect);
         #endif
     }
     //Bottom right collision
@@ -128,8 +131,8 @@ void Box::collision() {
         else collide(STANDING_BOTTOM_bm, jTo * w - size.y);
 
         #ifdef DEBUG_COLLISION
-        SDL_Rect rect = {iTo * w, jTo * w, w, w};
-        SDL_RenderDrawRect(renderer, &rect);
+            SDL_Rect rect = {iTo * w, jTo * w, w, w};
+            SDL_RenderDrawRect(renderer, &rect);
         #endif
     }
     //Bottom left collision
@@ -139,8 +142,8 @@ void Box::collision() {
         else collide(STANDING_BOTTOM_bm, jTo * w - size.y);
 
         #ifdef DEBUG_COLLISION
-        SDL_Rect rect = {iFrom * w, jTo * w, w, w};
-        SDL_RenderDrawRect(renderer, &rect);
+            SDL_Rect rect = {iFrom * w, jTo * w, w, w};
+            SDL_RenderDrawRect(renderer, &rect);
         #endif
     }
 

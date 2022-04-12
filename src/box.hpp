@@ -20,7 +20,7 @@ class Level;
 class Box : public GameObject {
     public:
         Box(Vector pos, Vector size, Level &level);
-        void collision();
+        void collision(uint8_t slow);
         void draw(uint8_t frame);
         void move(Box* box);
         Vector getCenter();
