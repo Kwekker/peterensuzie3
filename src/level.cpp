@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdlib>
 #include "box.hpp"
+#include "duck.hpp"
 
 Level::Level() {
     
@@ -20,14 +21,16 @@ void Level::readFile(const char *file) {
     }
 
     char s[256];
-    std::fgets(s, 50, levelFile);
-    size = std::atoi(s);
 
-    std::fgets(s, 50, levelFile);
-    width = std::atoi(s);
+    std::fgets(s, 256, levelFile);
+    width = std::strchr(s, '\n') - s + 1;
 
-    std::fgets(s, 50, levelFile);
-    height = std::atoi(s);
+    while(s[0] != '\n') {
+        std::fgets(s, 256, levelFile);
+        height++;
+    }
+
+    std::rewind(levelFile);
 
     data = (uint8_t *) malloc(width * height) + 1;
     for(uint16_t i = 0; i < height; i++) {
@@ -35,6 +38,10 @@ void Level::readFile(const char *file) {
         memcpy(data + i * width, s, width);
     }
     data [width * height] = 0;
+
+    std::fgets(s, 50, levelFile);   //Empty line
+    std::fgets(s, 50, levelFile);   //Size of each tile
+    size = std::atoi(s);
 
     std::fgets(s, 50, levelFile);
     elementsAmount = std::atoi(s);
@@ -45,14 +52,22 @@ void Level::readFile(const char *file) {
         if(s[0] == 'b') {
             Vector pos = Vector(std::atoi(s + 4), std::atoi(s + 8)) * size * 16;
             Vector size(std::atoi(s + 12), std::atoi(s + 16));
-            elements[i] = new Box(pos, size, *this);
+            elements[i] = new Box(pos, size, this);
+        }
+        else if(s[0] == 'd') {
+            Vector pos = Vector(std::atoi(s + 4), std::atoi(s + 8)) * size * 16;
+            Vector size(std::atoi(s + 12), std::atoi(s + 16));
+            player = new Duck(pos, size, this);
+            elements[i] = player;
         }
     }
 
-    std::cout << "Level size: " << size << "  x: " << width << "  y: " << height << std::endl;
+    std::cout << "Level size: " << (int)size << "  x: " << width << "  y: " << height << std::endl;
     std::cout << "Found " << (int)elementsAmount << " elements of size " << sizeof(GameObject) << "." << std::endl;
 
     std::fclose(levelFile);
+    std::cout << "file closed" << std::endl;
+
 }
 
 void Level::draw() {
@@ -69,7 +84,8 @@ void Level::draw() {
     }
 }
 
-void Level::run(uint8_t frame) {
+void Level::run(uint8_t frame, const uint8_t* state) {
+    player->handleKey(state, frame);
     for(uint8_t i = 0; i < elementsAmount; i++) {
         elements[i]->draw(frame);
     }
@@ -87,6 +103,10 @@ uint8_t Level::isPassable(uint16_t i, uint16_t j) {
 
 uint8_t Level::getData(uint16_t i, uint16_t j) {
     return data[i + j * width];
+}
+
+Duck* Level::getPlayer() {
+    return player;
 }
 
 /*

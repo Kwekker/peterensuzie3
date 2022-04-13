@@ -3,7 +3,7 @@
 #define DUCK_SPEED 32
 #define JUMP_SPEED 240
 
-Duck::Duck(Vector pos, Vector size, Level &level) : Box(pos, size, level) {
+Duck::Duck(Vector pos, Vector size, Level* level) : Box(pos, size, level) {
 
 }
 

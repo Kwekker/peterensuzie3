@@ -3,14 +3,12 @@
 
 #include <stdint.h>
 #include <iostream>
-#include "level.hpp"
 #include "vector.hpp"
-#include "gameobject.hpp"
 #include "box.hpp"
 
 class Duck : public Box {
     public:
-        Duck(Vector pos, Vector size, Level &level);
+        Duck(Vector pos, Vector size, Level* level);
         void handleKey(const uint8_t* state, uint8_t frame);
         
     private:

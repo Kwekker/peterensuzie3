@@ -2,7 +2,6 @@
 #define _BOX_HPP_
 
 #include "gameobject.hpp"
-#include "level.hpp"
 
 #define STANDING_RIGHT_bm   0b0001
 #define STANDING_TOP_bm     0b0010
@@ -19,7 +18,7 @@ class Level;
 
 class Box : public GameObject {
     public:
-        Box(Vector pos, Vector size, Level &level);
+        Box(Vector pos, Vector size, Level *level);
         void collision(uint8_t slow);
         void draw(uint8_t frame);
         void move(Box* box, uint8_t pull);

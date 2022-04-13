@@ -5,6 +5,5 @@
 
 extern SDL_Window* window;
 extern SDL_Renderer* renderer;
-extern void *player;
 
 #endif // _GLOBALS_HPP_

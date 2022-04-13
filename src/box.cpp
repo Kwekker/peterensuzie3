@@ -1,13 +1,14 @@
 #include "box.hpp"
+#include "level.hpp"
 
-#define DEBUG_COLLISION
+// #define DEBUG_COLLISION
 
-#define MOVEMENT_STRENGTH 570
+#define MOVEMENT_STRENGTH 600
 #define MOVEMENT_MAX 128
 #define FRICTION_FACTOR 0.8
 
-Box::Box(Vector pos, Vector size, Level &level) : GameObject(pos, size){
-    this->level = &level;
+Box::Box(Vector pos, Vector size, Level* level) : GameObject(pos, size){
+    this->level = level;
 }
 void Box::move(Box* box, uint8_t pull) {
     Vector displacement = (box->getCenter() - getCenter()).normalize(MOVEMENT_STRENGTH);
@@ -35,10 +36,9 @@ Vector Box::getCenter() {
 }
 
 void Box::draw(uint8_t frame) {
-    Box* pPlayer = (Box*) player;
 
     //Moving
-    if(moving) pPlayer->move(this, moving == 3);
+    if(moving) level->getPlayer()->move(this, moving == 3);
 
     //Gravity
     if(frame == 0xff || frame == 0) v.y.raw += GRAV;
@@ -54,7 +54,7 @@ void Box::draw(uint8_t frame) {
 
     if(frame != 0xff) {
         SDL_SetRenderDrawColor(renderer, 0, 100, 230, 255);
-        SDL_RenderDrawLine(renderer, getCenter().getX(), getCenter().getY(), pPlayer->getCenter().getX(), pPlayer->getCenter().getY());
+        SDL_RenderDrawLine(renderer, getCenter().getX(), getCenter().getY(), level->getPlayer()->getCenter().getX(), level->getPlayer()->getCenter().getY());
     }
 }
 

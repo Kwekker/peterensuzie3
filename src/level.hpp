@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <iostream>
-#include "gameobject.hpp"
+#include "duck.hpp"
 
 class Level {
     public:
@@ -11,7 +11,7 @@ class Level {
         Level(const char *file);
         void readFile(const char *file);
         void draw();
-        void run(uint8_t frame);
+        void run(uint8_t frame, const uint8_t* state);
         void mouse(uint8_t button, int16_t x, int16_t y);
         uint8_t isPassable(uint16_t i, uint16_t j);
 
@@ -19,7 +19,7 @@ class Level {
         uint16_t getWidth() const { return width; }
         uint16_t getHeight() const { return height; }
         uint8_t getData(uint16_t i, uint16_t j);
-        
+        Duck *getPlayer();
 
     private:
         uint8_t *data;
@@ -28,6 +28,7 @@ class Level {
         uint16_t height;
     
         GameObject **elements;
+        Duck *player;
         uint8_t elementsAmount;
 };
 
